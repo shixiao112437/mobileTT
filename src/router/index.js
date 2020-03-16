@@ -29,15 +29,15 @@ const routes = [
       component: first
     }, {
       // 主页 问答
-      path: '/question',
+      path: 'question',
       component: question
     }, {
       // 主页视频
-      path: '/video',
+      path: 'video',
       component: video
     }, {
       // 主页 用户
-      path: '/user',
+      path: 'user',
       component: user
     }]
   },

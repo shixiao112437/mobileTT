@@ -1,7 +1,7 @@
 <template>
   <div class="contain">
     <!-- 头部标题 -->
-    <van-nav-bar title="个人头条" right-text="搜索" @click-right="$router.push('/search')">
+    <van-nav-bar  title="个人头条" right-text="搜索" @click-right="$router.push('/search')" v-if="$route.path!== '/home/user'">
       <!-- <van-icon name="search" slot="right" /> -->
     </van-nav-bar>
     <!-- 首页内容 -->
