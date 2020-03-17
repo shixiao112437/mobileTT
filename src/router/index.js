@@ -51,7 +51,7 @@ const routes = [
     component: login
   }, {
     // 用户信息 编辑资料
-    path: '/userinfo',
+    path: '/user/info',
     component: info
   }, {
     // 搜索

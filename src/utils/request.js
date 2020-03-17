@@ -56,7 +56,7 @@ instance.interceptors.response.use(function (response) {
       path: '/login',
       query: {
         // 来自哪个url发送的请求
-        fromUrl: router.currentRoute.fullPath
+        redirectUrl: router.currentRoute.fullPath
       }
     }
     //   说明token失效
