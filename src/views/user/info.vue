@@ -1,5 +1,5 @@
 <template>
-  <h1>用户信息</h1>
+  <van-nav-bar title="编辑资料" left-arrow=""></van-nav-bar>
 </template>
 
 <script>

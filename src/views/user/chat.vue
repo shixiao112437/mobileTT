@@ -1,5 +1,5 @@
 <template>
-  <h1>聊天</h1>
+  <van-nav-bar title="小智同学" left-arrow=""></van-nav-bar>
 </template>
 
 <script>

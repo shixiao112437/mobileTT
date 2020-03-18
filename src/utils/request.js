@@ -15,7 +15,7 @@ const config = {
     return data ? JSONbig.parse(data) : {}
   }]
 }
-const instance = axios.create([config])
+const instance = axios.create(config)
 
 // 在请求拦截除 可以设置 一个请求头 用来 保存token 后端接口需要
 instance.interceptors.request.use(function (config) {
@@ -118,3 +118,4 @@ instance.interceptors.response.use(function (response) {
   }
   return Promise.reject(error) // 返回执行链的 catch
 })
+export default instance
