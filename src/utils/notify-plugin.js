@@ -4,5 +4,6 @@ export default {
   install (Vue) {
     // 重新 在Vue的原型上加载一个与notify一样的方法 并 每次 默认给他一个配置
     Vue.prototype.$Notify = params => Vue.prototype.$notify({ duration: 800, ...params })
+    Vue.prototype.$delayed = (params = 500) => setTimeout(() => {}, params)
   }
 }
