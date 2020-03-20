@@ -11,6 +11,8 @@
     "amfe-flexible": "^2.2.1",
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
+    "datjs": "0.0.1",
+    "dayjs": "^1.8.23",
     "json-bigint": "^0.3.0",
     "lib-flexible": "^0.3.2",
     "postcss-pxtorem": "^5.1.1",

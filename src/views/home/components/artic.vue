@@ -9,18 +9,18 @@
           <div class="article_item">
             <h3 class="van-ellipsis">{{item.title}}</h3>
             <div class="img_box" v-if="item.cover.type!==0">
-              <van-image v-for="(item,index) in item.cover.images" :key="index" class="w33" fit="cover" :src="item" />
+              <van-image lazy-load  v-for="(item,index) in item.cover.images" :key="index" class="w33" fit="cover" :src="item" />
             </div>
             <div class="info_box">
-              <span>{{item.aut_naem}}</span>
+              <span>{{item.aut_name}}</span>
               <span>{{item.comm_count}}评论</span>
-              <span>{{item.pubdate}}</span>
+              <span>{{item.pubdate | relativeTime}}</span>
               <span class="close">
                 <van-icon name="cross"></van-icon>
               </span>
             </div>
           </div>
-        </van-cell>11
+        </van-cell>
       </van-cell-group>
 
     </van-list>
@@ -72,7 +72,9 @@ export default {
     // 调用封装好的获取问政列表的方法 (先引入)
     // 请求参数
       // console.log('正在加载')
-      await this.$delayed()
+
+      await this.$delayed(1000)
+      // await setTimeout(res => {}, 1000)
       const params = {
         channel_id: this.channel_id, // 频道id 有父组件传用props(对象)传过来的
         // timestamp: this.timestamp ? this.timestamp : Date.now()
@@ -97,7 +99,7 @@ export default {
       /*    setTimeout(res => {
         this.refresh = false
       }, 1000) */
-      await this.$delayed()
+      await this.$delayed(1000)
       const params = {
         channel_id: this.channel_id,
         timestamp: Date.now()
