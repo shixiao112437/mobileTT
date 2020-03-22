@@ -1,37 +1,105 @@
 <template>
   <div class="container">
-      <van-tabs>
+      <van-tabs v-model="tabIndex">
         <van-tab :title="item.name" v-for="item in channelList" :key="item.id">
           <!--   <van-cell-group>
               <van-cell :value="`内容${item}`" :title="`标题${item}`" v-for="item in 20" :key="item"></van-cell>
             </van-cell-group> -->
 
             <!-- 将 频道类型的id传给子组件-->
-            <articlist :channel_id='item.id'></articlist>
+            <articlist @openPopup='openPopup' :channel_id='item.id'></articlist>
         </van-tab>
 
       </van-tabs>
+      <!-- tab栏图标 -->
        <span class="bar_btn">
         <!-- 放入图标 vant图标 -->
-         <van-icon name='wap-nav'></van-icon>
+         <van-icon @click="sheetShow=true " name='wap-nav'></van-icon>
       </span>
+      <!-- 遮罩层 -->
+      <van-popup v-model="popupShow">
+        <!--  遮罩层内容组件 -->
+        <popup @dislike='dislike' @inform='inform'></popup>
+      </van-popup>
+      <!-- 上菜菜单 频道列表 -->
+      <van-action-sheet v-model="sheetShow" title="编辑频道" :actions="action" :round="false">
+          <!-- 编辑频道的布局 -->
+          <sheet></sheet>
+      </van-action-sheet>
   </div>
 </template>
 
 <script>
 import Artic from '@/views/home/components/artic' // 引入tab选的子组件
-import { getChannel } from '@/api/artic'
+import { getChannel, dislike, informArtic } from '@/api/artic'
+import popup from '@/views/home/components/popup'
+import Bus from '@/utils/eventbus'
+import sheet from './components/sheet'
 export default {
   data () {
     return {
-      channelList: [] // 保顿获取的频道类型的相关信息
+      channelList: [], // 保顿获取的频道类型的相关信息
+      popupShow: false, // 遮罩层显示与否
+      manageArtID: null, // 管理谋篇文章的id
+      tabIndex: 0, // 当前激活的tab栏 激活下标
+      sheetShow: false, // 上拉列表 是否显示
+      action: [{
+        name: '当前频道',
+        color: 'red'
+      }, {
+        name: '所有频道',
+        color: 'green'
+      }]
     }
   },
   methods: {
+    // 获取频道列表
     async getChannel () {
       const res = await getChannel() // res是获取到的频道对象
       console.log(res)
       this.channelList = res.channels
+    },
+    // 打开遮罩层
+    openPopup (artid) {
+      this.popupShow = true // 遮罩层状态
+      this.manageArtID = artid
+    },
+    // 不感兴趣
+    async dislike () {
+      this.popupShow = false // 先关闭遮罩层
+      try {
+        await dislike(this.manageArtID) // 发送请求 不感兴趣文章
+        // console.log(res)
+        // 然后将 不感兴趣的文章 给删除(在文章列表页面)
+        this.$Notify({
+          type: 'success',
+          message: '操作成功'
+        })
+        Bus.$emit('delArticLIst', this.manageArtID, this.channelList[this.tabIndex].id) // 当前文章id 和频道类型id
+      } catch (error) {
+        this.$Notify({
+          message: '操作失败'
+        })
+      }
+    },
+    // 举报
+    async inform (type) {
+      this.popupShow = false // 遮罩层状态
+      try {
+        await informArtic(this.manageArtID, type)
+        this.$Notify({
+          type: 'success',
+          message: '举报成功',
+          background: 'blue',
+          color: 'white'
+
+        })
+        Bus.$emit('delArticLIst', this.manageArtID, this.channelList[this.tabIndex].id) // 当前文章id 和频道类型id
+      } catch (error) {
+        this.$Notify({
+          message: '举报失败'
+        })
+      }
     }
   },
   created () {
@@ -39,12 +107,26 @@ export default {
     this.getChannel()
   },
   components: {
-    articlist: Artic
+    articlist: Artic,
+    popup,
+    sheet
   }
 }
 </script>
 
 <style scoped lang='less'>
+// 频道列表的样式
+.van-action-sheet {
+  max-height: 100%;
+  height: 100%;
+  .van-action-sheet__header {
+    background: #3296fa;
+    color: #fff;
+    .van-icon-close {
+      color: #fff;
+    }
+  }
+}
 .van-tabs {
   height: 100%;
   display: flex;

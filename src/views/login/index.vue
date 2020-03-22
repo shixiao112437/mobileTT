@@ -92,7 +92,12 @@ export default {
           const payload = {
             user: res
           }
-          this.updataToken(payload)
+
+          this.updataToken(payload) // 设置token 共享
+          // 当前登录页 的url 地址是否含有 参数(登录成功要跳转的页面)
+          const path = this.$route.query.redirectUrl
+
+          this.$router.push(path || '/home')
         } catch (error) {
           this.$Notify({
             message: `用户名或者验证码错误

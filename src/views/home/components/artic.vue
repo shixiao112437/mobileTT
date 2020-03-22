@@ -15,8 +15,10 @@
               <span>{{item.aut_name}}</span>
               <span>{{item.comm_count}}评论</span>
               <span>{{item.pubdate | relativeTime}}</span>
-              <span class="close">
-                <van-icon name="cross"></van-icon>
+              <!-- ×可以对数据进行操作 只有登录的用户才可以 操作 要判断 是否有token 给据vuex共享的属性 -->
+              <span class="close" v-if="user.token">
+                <!-- 点击查号 通过自定义事件 改变 popup的状态 并传出 当前文章的id(大数字需要toString)  -->
+                <van-icon name="cross" @click="$emit('openPopup',item.art_id.toString())"></van-icon>
               </span>
             </div>
           </div>
@@ -29,15 +31,32 @@
 </template>
 
 <script>
+import Bus from '@/utils/eventbus'
 import { getArtic } from '@/api/artic'
+import { mapState } from 'vuex' // 引入辅助函数 将token的状态共享
 export default {
   props: {
     // 用于接受父组件的传值
     channel_id: {
-      type: Number, // 传过来的类型
+      type: Number, // 传过来的频道类型
       required: true, // 是否必须传
       default: 20 // 默认值
     }
+  },
+  created () {
+    //  id 为文章id , type 为 频道类型的id
+    Bus.$on('delArticLIst', (id, type) => {
+      // 当前频道下的文章 列表 删除 某一篇文章
+      if (this.channel_id === type) {
+        const index = this.articList.findIndex(item => {
+          return item.art_id.toString() === id
+        })
+        this.articList.splice(index, 1)
+        if (!this.articList.length) {
+          this.onLoad()
+        }
+      }
+    })
   },
   data () {
     return {
@@ -73,7 +92,7 @@ export default {
     // 请求参数
       // console.log('正在加载')
 
-      await this.$delayed(1000)
+      await this.$delayed(5000)
       // await setTimeout(res => {}, 1000)
       const params = {
         channel_id: this.channel_id, // 频道id 有父组件传用props(对象)传过来的
@@ -99,7 +118,7 @@ export default {
       /*    setTimeout(res => {
         this.refresh = false
       }, 1000) */
-      await this.$delayed(1000)
+      await this.$delayed(5000)
       const params = {
         channel_id: this.channel_id,
         timestamp: Date.now()
@@ -123,7 +142,12 @@ export default {
         this.refreshText = '么得数据了O(∩_∩)O~'
       }
     }
+
+  },
+  computed: {
+    ...mapState(['user']) // 引入 user 这个属性 usr.token 为token
   }
+
 }
 </script>
 
