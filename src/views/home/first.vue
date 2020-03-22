@@ -25,14 +25,14 @@
       <van-action-sheet v-model="sheetShow" title="编辑频道" :actions="action" :round="false">
           <!-- 编辑频道的布局 -->
           <!-- 将频道列表的数组 传给子组件 -->
-          <sheet :channelList=channelList></sheet>
+          <sheet @addChannel='addChannel' @delChannel='delChannel' :activeTab='tabIndex' @selectChannel='selectChannel' :channelList=channelList></sheet>
       </van-action-sheet>
   </div>
 </template>
 
 <script>
 import Artic from '@/views/home/components/artic' // 引入tab选的子组件
-import { getChannel, dislike, informArtic } from '@/api/artic'
+import { getChannel, dislike, informArtic, delChannel, addChannel } from '@/api/artic'
 import popup from '@/views/home/components/popup'
 import Bus from '@/utils/eventbus'
 import sheet from './components/sheet'
@@ -101,6 +101,44 @@ export default {
           message: '举报失败'
         })
       }
+    },
+    // 切换频道
+    selectChannel (id) {
+      // alert(id)
+      // 先关闭上拉菜单
+      this.sheetShow = false
+      // 然后跳转 选择的频道 tab栏
+      // 获取当前激活的tab栏index
+      const index = this.channelList.findIndex(item => item.id === id)
+      // alert(index)
+      this.tabIndex = index
+    },
+    // 删除频道
+    async  delChannel (id) {
+      try {
+        // 先修改内存中的频道列表(删除选中的频道 在内存中也要删除)
+        delChannel(id)
+        this.sheetShow = false // 关闭下拉菜单
+        // 获取要删除频道的索引
+        // 如果删除的频道在当前激活频道的前面  激活的频道的索引 要往前挪动
+        const index = this.channelList.findIndex(item => item.id === id)
+        if (index <= this.tabIndex) {
+          this.tabIndex--
+          this.channelList.splice(index, 1)
+        }
+      } catch (error) {
+        this.$Notify({
+          message: error.message,
+          type: 'danger'
+        })
+      }
+    },
+    // 添加频道
+    async addChannel (item) {
+      // this.sheetShow = false
+      this.channelList.push(item)
+      // 并将本地内存中的频道列表 添加数据
+      addChannel(item)
     }
   },
   created () {

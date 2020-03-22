@@ -8,9 +8,10 @@
         <van-button v-else @click="editing=false" size="mini" type="danger" plain>完成</van-button>
       </div>
       <van-grid class="van-hairline--left">
-        <van-grid-item v-for="(item,index) in channelList" :key="index">
-          <span class="f12">{{item.name}}</span>
-          <van-icon class="btn" name="cross" v-if="editing"></van-icon>
+        <van-grid-item @click="$emit('selectChannel',item.id)" v-for="(item,index) in channelList" :key="index">
+          <span :class="{red:index===activeTab}" class="f12">{{item.name}}</span>
+          <!-- 删除频道 -->
+          <van-icon @click.stop="$emit('delChannel',item.id) " class="btn" name="cross" v-if="editing"></van-icon>
         </van-grid-item>
       </van-grid>
     </div>
@@ -20,7 +21,8 @@
           <!-- 可选频道 的渲染 现获取 在筛选出与我的频道的差值数组  -->
         <van-grid-item v-for="(item,index) in choiceChannel" :key="index">
           <span class="f12">{{item.name}}</span>
-          <van-icon class="btn" name="plus"></van-icon>
+          <!-- 添加频道 -->
+          <van-icon @click="$emit('addChannel',item)" class="btn" name="plus"></van-icon>
         </van-grid-item>
       </van-grid>
     </div>
@@ -31,11 +33,16 @@
 import { getAllChannel } from '@/api/artic'
 export default {
   props: {
+    //   频道列表 数组
     channelList: {
       required: true,
       type: Array,
       default: () => [] // 返回一个空数组 // 对象或数组的默认值必须从一个工厂函数返回。
-
+    },
+    activeTab: {
+      required: true,
+      type: Number,
+      default: 0
     }
   },
   data () {
