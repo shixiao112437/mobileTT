@@ -12,11 +12,19 @@ export function getArtic (data) {
   })
 }
 /*
-封装一个获取频道类型的方法 并返回
+封装一个获取当前用户的频道类型的方法 并返回
  */
 export function getChannel () {
   return AXIOS({
     url: '/user/channels'
+  })
+}
+/*
+封装一个获取所有的频道类型的方法 并返回
+ */
+export function getAllChannel () {
+  return AXIOS({
+    url: '/channels'
   })
 }
 /*

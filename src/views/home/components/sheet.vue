@@ -8,17 +8,18 @@
         <van-button v-else @click="editing=false" size="mini" type="danger" plain>完成</van-button>
       </div>
       <van-grid class="van-hairline--left">
-        <van-grid-item v-for="index in 8" :key="index">
-          <span class="f12">频道{{index}}</span>
-          <van-icon class="btn" name="cross"></van-icon>
+        <van-grid-item v-for="(item,index) in channelList" :key="index">
+          <span class="f12">{{item.name}}</span>
+          <van-icon class="btn" name="cross" v-if="editing"></van-icon>
         </van-grid-item>
       </van-grid>
     </div>
     <div class="channel">
       <div class="tit">可选频道：</div>
       <van-grid class="van-hairline--left">
-        <van-grid-item v-for="index in 8" :key="index">
-          <span class="f12">频道{{index}}</span>
+          <!-- 可选频道 的渲染 现获取 在筛选出与我的频道的差值数组  -->
+        <van-grid-item v-for="(item,index) in choiceChannel" :key="index">
+          <span class="f12">{{item.name}}</span>
           <van-icon class="btn" name="plus"></van-icon>
         </van-grid-item>
       </van-grid>
@@ -27,11 +28,35 @@
 </template>
 
 <script>
+import { getAllChannel } from '@/api/artic'
 export default {
+  props: {
+    channelList: {
+      required: true,
+      type: Array,
+      default: () => [] // 返回一个空数组 // 对象或数组的默认值必须从一个工厂函数返回。
+
+    }
+  },
   data () {
     return {
-      editing: false
+      editing: false, // 频道编辑/完成
+      choiceChannel: []
+
     }
+  },
+  methods: {
+    //   获取可选频道 并筛选渲染
+    async getChoiceChannel () {
+      // 引入调用获取所有频道的方法
+      const res = await getAllChannel() // res 是所有的频带类型
+      //   筛选
+      const data = res.channels.filter(item => !this.channelList.some(i => i.id === item.id))
+      this.choiceChannel = data
+    }
+  },
+  created () {
+    this.getChoiceChannel()
   }
 }
 </script>

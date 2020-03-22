@@ -24,7 +24,8 @@
       <!-- 上菜菜单 频道列表 -->
       <van-action-sheet v-model="sheetShow" title="编辑频道" :actions="action" :round="false">
           <!-- 编辑频道的布局 -->
-          <sheet></sheet>
+          <!-- 将频道列表的数组 传给子组件 -->
+          <sheet :channelList=channelList></sheet>
       </van-action-sheet>
   </div>
 </template>
@@ -38,7 +39,7 @@ import sheet from './components/sheet'
 export default {
   data () {
     return {
-      channelList: [], // 保顿获取的频道类型的相关信息
+      channelList: [], // 保存获取的频道类型的相关信息
       popupShow: false, // 遮罩层显示与否
       manageArtID: null, // 管理谋篇文章的id
       tabIndex: 0, // 当前激活的tab栏 激活下标
