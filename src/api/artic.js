@@ -166,3 +166,12 @@ export function CancelFollow (target) {
     method: 'delete'
   })
 }
+/*
+ * 获取评论
+ */
+export function getComments (params) {
+  return AXIOS({
+    url: '/comments',
+    params
+  })
+}

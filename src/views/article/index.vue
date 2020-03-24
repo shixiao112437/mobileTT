@@ -19,13 +19,18 @@
         &nbsp;&nbsp;&nbsp;&nbsp;
         <van-button round size="small" :class="{active: articInfo.attitude === 0}" plain icon="delete">不喜欢</van-button>
       </div>
+   <comments></comments>
     </div>
   </div>
 </template>
 
 <script>
 import { getArticById, followAuth, CancelFollow } from '@/api/artic'
+import comments from './components/comment'
 export default {
+  components: {
+    comments
+  },
   data () {
     return {
       articInfo: {} // 文章的具体信息
@@ -89,6 +94,7 @@ export default {
     position:sticky;
     background-color: #fff;
     top:46px;
+    z-index: 2;
     .text {
       flex: 1;
       padding-left: 10px;
