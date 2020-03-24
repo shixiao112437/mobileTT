@@ -116,3 +116,24 @@ export function informArtic (target, type, remark = null) {
 
   })
 }
+/*
+** 疯转获取联想建议
+**
+ */
+export function getTipList (q) {
+  return AXIOS({
+    url: '/suggestion',
+    params: {
+      q
+    }
+  })
+}
+/*
+  搜索结果 方法
+ */
+export function getResults (params) {
+  return AXIOS({
+    url: '/search',
+    params
+  })
+}

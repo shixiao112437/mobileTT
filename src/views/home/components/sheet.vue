@@ -48,22 +48,28 @@ export default {
   data () {
     return {
       editing: false, // 频道编辑/完成
-      choiceChannel: []
+      allChannel: []
 
     }
   },
   methods: {
-    //   获取可选频道 并筛选渲染
+    //   获取所有频道
     async getChoiceChannel () {
       // 引入调用获取所有频道的方法
       const res = await getAllChannel() // res 是所有的频带类型
-      //   筛选
+      /*     //   筛选
       const data = res.channels.filter(item => !this.channelList.some(i => i.id === item.id))
-      this.choiceChannel = data
+      this.choiceChannel = data */
+      this.allChannel = res.channels
     }
   },
   created () {
     this.getChoiceChannel()
+  },
+  computed: {
+    choiceChannel () {
+      return this.allChannel.filter(item => !this.channelList.some(i => i.id === item.id))
+    }
   }
 }
 </script>
