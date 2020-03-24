@@ -5,7 +5,7 @@
     <van-list v-model="loading" @load="onLoad" :offset="200" :finished="finshed" loading-text='正在努力加载'>
       <van-cell-group>
         <!-- 循环文章列表  文章的id是一个大数字 对象 需要用toString()-->
-        <van-cell v-for="item in articList" :key="item.art_id.toString()">
+        <van-cell :to="`/article?art_id=${item.art_id.toString()}`" v-for="item in articList" :key="item.art_id.toString()">
           <div class="article_item">
             <h3 class="van-ellipsis">{{item.title}}</h3>
             <div class="img_box" v-if="item.cover.type!==0">
@@ -18,7 +18,7 @@
               <!-- ×可以对数据进行操作 只有登录的用户才可以 操作 要判断 是否有token 给据vuex共享的属性 -->
               <span class="close" v-if="user.token">
                 <!-- 点击查号 通过自定义事件 改变 popup的状态 并传出 当前文章的id(大数字需要toString)  -->
-                <van-icon name="cross" @click="$emit('openPopup',item.art_id.toString())"></van-icon>
+                <van-icon name="cross" @click.stop="$emit('openPopup',item.art_id.toString())"></van-icon>
               </span>
             </div>
           </div>

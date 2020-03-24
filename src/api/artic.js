@@ -137,3 +137,32 @@ export function getResults (params) {
     params
   })
 }
+/*
+ * 获取文章详情
+ */
+export function getArticById (id) {
+  return AXIOS({
+    url: `/articles/${id}`
+  })
+}
+/*
+ *关注作者
+ */
+export function followAuth (target) {
+  return AXIOS({
+    url: '/user/followings',
+    method: 'post',
+    data: {
+      target
+    }
+  })
+}
+/*
+ *取消关注
+ */
+export function CancelFollow (target) {
+  return AXIOS({
+    url: `/user/followings/${target}`,
+    method: 'delete'
+  })
+}
