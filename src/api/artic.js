@@ -175,3 +175,13 @@ export function getComments (params) {
     params
   })
 }
+/*
+ * 添加评论
+ */
+export function addComments (data) {
+  return AXIOS({
+    url: '/comments',
+    method: 'post',
+    data
+  })
+}

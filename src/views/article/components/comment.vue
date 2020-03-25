@@ -30,14 +30,14 @@
     <div class="reply-container van-hairline--top">
       <van-field v-model="value" placeholder="写评论...">
         <van-loading v-if="submiting" slot="button" type="spinner" size="16px"></van-loading>
-        <span class="submit"  slot="button">提交</span>
+        <span @click="addComment" class="submit"  slot="button">提交</span>
       </van-field>
     </div>
     <!-- 查看回复评论  用上来菜单 -->
     <van-action-sheet v-model="sheetShow" title="回复评论" :round="false" class="reply_dialog">
-     <van-list @load="getReply" v-model="reply.loading" :finished="reply.finished" finished-text="没有更多了">
+     <van-list :immediate-check="false" @load="getReply" v-model="reply.loading" :finished="reply.finished" finished-text="没有更多了">
         <div class="item van-hairline--bottom van-hairline--top" v-for="(item,index) in reply.replyList" :key="index">
-          <van-image round width="1rem" height="1rem" fit="fill" src="https://img.yzcdn.cn/vant/cat.jpeg" />
+          <van-image round width="1rem" height="1rem" fit="fill" :src="item.aut_photo" />
           <div class="info">
             <p><span class="name">{{item.aut_name}}</span></p>
             <p>{{item.content}}</p>
@@ -50,13 +50,13 @@
 </template>
 
 <script>
-import { getComments } from '@/api/artic'
+import { getComments, addComments } from '@/api/artic'
 export default {
   data () {
     return {
       loading: false,
       finished: false,
-      commentsList: [], // 文章的列表列表
+      commentsList: [], // 文章的评论列表
       value: '',
       submiting: false,
       offset: null,
@@ -65,7 +65,8 @@ export default {
         replyList: [],
         loading: false,
         finished: false,
-        offset: null
+        offset: null,
+        id: ''
       }
     }
   },
@@ -93,10 +94,13 @@ export default {
     openReply (id) {
       this.sheetShow = true
       this.reply.replyList = [] // 先清空 回复评论的列表
+      this.reply.offset = null
       this.reply.finished = false
-      //   this.reply.loading = false // ???????
       this.reply.id = id // 记录点击文评论的id
+      this.reply.loading = true // ???????
+      this.getReply()
     },
+    // 获取回复的评论
     async getReply () {
       const params = {
         type: 'c',
@@ -111,6 +115,30 @@ export default {
         // 表示 还没没结束
         // data.last_id是 当前页的最后一个id
         this.reply.offset = res.last_id
+      }
+    },
+    // 提交评论
+    async addComment () {
+      try {
+        // 添加评论的body参数
+        const data = {
+          content: this.value,
+          target: this.reply.id || this.$route.query.art_id,
+          art_id: this.reply.id ? this.$route.query.art_id : null
+        }
+        const res = await addComments(data)
+        if (!this.reply.id) {
+          this.commentsList.unshift(res.new_obj)
+        } else {
+          this.reply.replyList.unshift(res.new_obj)
+          const comment = this.commentsList.find(item => item.com_id.toString() === this.reply.id)
+          comment && comment.reply_count++
+        }
+        this.value = ''
+      } catch (error) {
+        this.$Notify({
+          message: '提交失败'
+        })
       }
     }
   }

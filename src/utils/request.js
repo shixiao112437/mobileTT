@@ -61,7 +61,7 @@ instance.interceptors.response.use(function (response) {
     }
     //   说明token失效
     // 先判断有没有token
-    if (store.state.user.refresh.token) {
+    if (store.state.user.refresh_token) {
       // 有refresh_token 可以通过发送请求获取新的token
       // 因为现在的token已经失效了  instance在请求拦截处 要统一 注入token
       // (如果用instance发送请求的话 会造成死循环 还会进入函数 造成死循环)
