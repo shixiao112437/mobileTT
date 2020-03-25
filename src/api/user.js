@@ -8,3 +8,20 @@ export function login (data) {
     data
   })
 }
+/*
+ *封装一个回去用户信息的方法
+ *
+ */
+export function getUserInfo () {
+  return AXIOS({
+    url: '/user'
+  })
+}
+/*
+ *获取用户个人资料的方法
+ */
+export function getUserData () {
+  return AXIOS({
+    url: '/user/profile'
+  })
+}
