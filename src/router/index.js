@@ -23,10 +23,12 @@ const routes = [
     // 主页路由
     path: '/home',
     component: home,
+
     children: [{
       // 主页首页
       path: '',
-      component: first
+      component: first,
+      meta: { isAlive: true }
     }, {
       // 主页 问答
       path: 'question',

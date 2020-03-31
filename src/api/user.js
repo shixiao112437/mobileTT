@@ -25,3 +25,13 @@ export function getUserData () {
     url: '/user/profile'
   })
 }
+/*
+ *编辑用户资料
+ */
+export function editInfo (data) {
+  return AXIOS({
+    url: '/user/profile',
+    method: 'patch',
+    data
+  })
+}

@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-      <van-tabs v-model="tabIndex">
+      <van-tabs v-model="tabIndex" animated swipeable @change='changeTab'>
         <van-tab :title="item.name" v-for="item in channelList" :key="item.id">
           <!--   <van-cell-group>
               <van-cell :value="`内容${item}`" :title="`标题${item}`" v-for="item in 20" :key="item"></van-cell>
@@ -139,6 +139,12 @@ export default {
       this.channelList.push(item)
       // 并将本地内存中的频道列表 添加数据
       addChannel(item)
+    },
+    // 手动切换频道
+    changeTab () {
+      // 获取当前频道的id
+      const id = this.channelList[this.tabIndex].id
+      Bus.$emit('changeTab', id)
     }
   },
   created () {

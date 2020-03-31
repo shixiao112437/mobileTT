@@ -69,11 +69,12 @@ export default {
   },
   methods: {
     // 引入vuex中删除token的方法
-    ...mapMutations(['delUser']),
+    ...mapMutations(['delUser', 'editPhoto']),
     // 获取用户的个人信息
     async getUserInfo () {
       const res = await getUserInfo()
       this.userInfo = res
+      this.editPhoto({ photo: this.userInfo.photo }) // 更新用户的头像
     },
     // 退出登录
     async logout () {

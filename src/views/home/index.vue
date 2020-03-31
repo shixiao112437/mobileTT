@@ -6,7 +6,9 @@
     </van-nav-bar>
     <!-- 首页内容 -->
     <div class="wrap" :class="{noTop: $route.path === 'home/user'}">
+    <keep-alive>
       <router-view></router-view>
+    </keep-alive>
     </div>
     <!-- 底部导航 -->
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="scroll-wrapper">
+  <div class="scroll-wrapper" @scroll="remember" ref="myScoll">
     <van-pull-refresh v-model="refresh" @refresh='pullRefresh' loading-text='正在急速加载' :success-text='refreshText'>
 
     <van-list v-model="loading" @load="onLoad" :offset="200" :finished="finshed" loading-text='正在努力加载'>
@@ -57,6 +57,13 @@ export default {
         }
       }
     })
+    Bus.$on('changeTab', id => {
+      if (id === this.channel_id) {
+        if (this.scrollTop && this.$refs.myScoll) {
+          this.$refs.myScoll.scrollTop = this.scrollTop
+        }
+      }
+    })
   },
   data () {
     return {
@@ -65,7 +72,8 @@ export default {
       articList: [], // 文章列表
       timestamp: null, // 时间戳
       refresh: false, // 是否加载完成
-      refreshText: '' // 下拉刷新 提示文字
+      refreshText: '', // 下拉刷新 提示文字
+      scrollTop: '' // 记录当前的滚动距离  为了做阅读记忆
     }
   },
   methods: {
@@ -141,11 +149,26 @@ export default {
         // 没有 提示没有最新消息
         this.refreshText = '么得数据了O(∩_∩)O~'
       }
+    },
+    // 记录滚动距离
+    remember (e) {
+      // 记录 当前的滚动距离  滚动事件触发的频率太高 需要用防抖 来降低频率
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
+        this.scrollTop = e.target.scrollTop
+        console.log(this.scrollTop)
+      }, 300)
     }
 
   },
+  // 计算属性
   computed: {
     ...mapState(['user']) // 引入 user 这个属性 usr.token 为token
+  },
+  activated () {
+    if (this.$refs.myScoll && this.scrollTop) {
+      this.$refs.myScoll.scrollTop = this.scrollTop
+    }
   }
 
 }

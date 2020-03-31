@@ -10,7 +10,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     // 放需要共享的状态
-    user: getUserToken()
+    user: getUserToken(),
+    photo: null
   },
   mutations: {
     // 修改state中数据的方法
@@ -18,9 +19,14 @@ export default new Vuex.Store({
       state.user = payload.user // 修改token
       setUserToken(state.user) // 修改缓存中的token
     },
+    // 删除token
     delUser (state) {
       state.user = {} // 删除token
       delUserToken() // 删除缓存中token
+    },
+    // 更新照片
+    editPhoto (state, payload) {
+      state.photo = payload.photo
     }
   },
   actions: {
